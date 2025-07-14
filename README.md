@@ -20,3 +20,7 @@ add blogA and blogB to demonstrate the ability to render different pages
 
 ### V6
 added home button to display the landing page. added a function for the click event.
+
+### V7
+ - integrated azulFooterV4 into azulNbaseMenuV7
+ - created html skeleton for term and privacy button
