@@ -2,7 +2,9 @@
 //v3 add select
 //v4 add textarea
 //v5
-//v6 add button
+//v6 add azulButton
+//V7
+//V8 adj inp style from n=min width to width
 
 class azulButton {
 	constructor(butObj) {
@@ -47,7 +49,8 @@ class azulInp {
         	margin: '10px',
         	border: '1px dashed green',
         	minHeight: '60px',
-        	minWidth: inpobj.Length,
+//        	minWidth: inpobj.Length,
+        	width: inpobj.Length,
         	position: 'relative',
     	};
     	Object.assign(this.inpDiv.style,divStyl);
@@ -84,7 +87,8 @@ class azulInp {
 			left: '0px',
 			bottom: '0px',
 			padding: '5px 0 0 0',
-			minWidth: inpobj.Length,
+//			minWidth: inpobj.Length,
+			width: inpobj.Length,
 		};
 
 		let inp = document.createElement('input');
@@ -121,8 +125,10 @@ class azulInp {
 		ev.preventDefault();
 //	console.log("lost focus");
 		inp.style.borderBottom = '1px solid black';
-//		lab.style.visibility = 'hidden';
-		if (inp.value.length == 0) {inp.placeholder='Enter ' + this.inpobj.Field;}
+		if (inp.value.length == 0) {
+			inp.placeholder='Enter ' + this.inpobj.Field;
+			lab.style.visibility = 'hidden';
+		}
 //	if (inp.change) {filledInp(el.value);inp.Change = false;}
 		return;
 	}
