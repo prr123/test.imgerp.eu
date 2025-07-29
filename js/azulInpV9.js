@@ -1,0 +1,447 @@
+//v2 classes
+//v3 add select
+//v4 add textarea
+//v5
+//v6 add azulButton
+//V7
+//V8: adj inp style from n=min width to width
+//V9: add base and focus style to inpstyle
+//
+class azulButton {
+	constructor(butObj) {
+		this.el = document.createElement('button');
+		if (Object.hasOwn(butObj,'style')) {Object.assign(this.el.style,butObj.style);}
+		this.el.textContent = butObj.text;
+//		this.el.addEventListener("click", butObj.clickfun);
+	}
+}
+
+class azulSubmit {
+	constructor(subObj) {
+		this.form = document.createElement('form');
+		this.form.action = '/login';
+		this.form.method = 'post';
+//		if (Object.hasOwn(subObj,'style')) {Object.assign(this.form.style,subObj.style);}
+		let sbut = document.createElement('button');
+		sbut.type = 'submit';
+		sbut.value = 'login';
+		sbut.textContent = 'login';
+		const sbutStyl = {
+			height: '30px',
+            width: '100px',
+            margin: '20px',
+            border: '1px solid black',
+		};
+		Object.assign(sbut.style,sbutStyl);
+		sbut.addEventListener("click", (e) => {
+			e.preventDefault();
+			this.form.submit();
+		});
+		this.form.appendChild(sbut);
+	}
+}
+
+class azulInp {
+	constructor(inpobj) {
+		this.inpDiv = document.createElement('div');
+//		this.inpobj = inpobj;
+    	const divStyl = {
+        	id: 'inpDiv' + inpobj.idx,
+        	margin: '10px',
+        	border: '1px dashed green',
+        	minHeight: '60px',
+//        	minWidth: inpobj.Length,
+        	width: inpobj.Length,
+        	position: 'relative',
+    	};
+    	Object.assign(this.inpDiv.style,divStyl);
+		if (inpobj.hasOwnProperty('divStyle')) {
+    		Object.assign(this.inpDiv.style,inpobj.divStyl);
+		}
+		this.inpDiv.err = false;
+
+		let lab = document.createElement('label');
+		lab.textContent = inpobj.Field;
+		lab.htmlFor = 'inp' + inpobj.idx;
+		const labStyl = {
+			visibility: 'hidden',
+			color: 'blue',
+			textAlign: 'start',
+			position: 'absolute',
+			fontSize: '1.0em',
+			left: '2px',
+			top: '5px',
+		};
+		Object.assign(lab.style,labStyl);
+		if (inpobj.hasOwnProperty('labStyl')) {
+    		Object.assign(lab.style,inpobj.labStyl);
+		}
+
+		const inpStyl = {
+			borderWidth: '0',
+			outlineStyle: 'none',
+			position: 'absolute',
+			left: '0px',
+			bottom: '0px',
+			padding: '5px 0 0 0',
+//			minWidth: inpobj.Length,
+			width: inpobj.Length,
+		};
+
+		let inp = document.createElement('input');
+		inp.baseOptStyle = '1px solid grey';
+		inp.baseReqStyle = '2px solid black';
+		inp.focusStyle = '2px solid blue';
+		inp.errorStyle = '2px solid red';
+        if (inpobj.hasOwnProperty('baseStyle')) {
+            Object.assign(inp.baseStyle,inpobj.baseStyle);
+        }
+        if (inpobj.hasOwnProperty('focusStyle')) {
+            Object.assign(inp.focusStyle,inpobj.focusStyle);
+        }
+        if (inpobj.hasOwnProperty('errorStyle')) {
+            Object.assign(inp.errorStyle,inpobj.errorStyle);
+        }
+
+		inp.type = 'text';
+		if ('type' in inpobj) {inp.type = inpobj.type;}
+		inp.id ='inp' + inpobj.idx;
+		inp.label = lab;
+		inp.place = inpobj.Field;
+		inp.Req = inpobj.Req;
+//		if ('place' in inpobj) {inp.placeholder = inpobj.place; inp.place = inpobj.place;}
+		inp.placeholder = 'Enter ' + inp.place;
+		Object.assign(inp.style,inpStyl);
+		inp.style.borderBottom = inp.baseOptStyle;
+		if (inp.Req) {inp.style.borderBottom = inp.baseReqStyle;}
+
+		inp.addEventListener('focus', (event) => {this.inpMdFocInp(event, inp, lab);});
+		inp.addEventListener('blur', (event) => {this.inpMdBlurInp(event, inp, lab);});
+        inp.addEventListener('keyup', (event) => {this.inpMdKeyUpInp(event, inp, lab);});
+
+		this.inpDiv.inp = inp;
+
+		this.inpDiv.appendChild(lab);
+		this.inpDiv.appendChild(inp);
+	}
+
+
+	inpMdFocInp(ev, inp, lab) {
+		ev.preventDefault();
+		inp.placeholder="";
+		inp.style.borderBottom = inp.focusStyle;
+//            Object.assign(el.style,el.focusStyle);
+		lab.style.visibility = 'visible';
+		inp.Change = false;
+		return;
+	}
+
+	inpMdBlurInp(ev, inp, lab) {
+		ev.preventDefault();
+//	console.log("lost focus");
+		inp.style.borderBottom = inp.baseOptStyle;
+		if (inp.Req) {inp.style.borderBottom = inp.baseReqStyle;}
+		if (inp.value.length == 0) {
+			inp.placeholder='Enter ' + inp.place;
+			lab.style.visibility = 'hidden';
+		}
+//	if (inp.change) {filledInp(el.value);inp.Change = false;}
+		return;
+	}
+
+
+    inpMdKeyUpInp(ev, inp, lab) {
+        ev.preventDefault();
+
+        let key = ev.key;
+        let el = ev.target;
+        let ctrlkey = ev.ctrlKey;
+//      console.log('key: ' + key);
+         switch (key) {
+//            case "ArrowLeft":
+//            case "ArrowRight":
+            case "ArrowUp":
+//				console.log("arrow down");
+				this.previnp.inpDiv.inp.focus();
+                break;
+            case 'ArrowDown':
+//				console.log("arrow down");
+				this.nextinp.inpDiv.inp.focus();
+				break;
+            case 'Enter':
+//				console.log("enter");
+				this.nextinp.inpDiv.inp.focus();
+                break;
+            default:
+
+              return;
+
+        }
+//        if (inp.value.length == 0) {inp.placeholder=this.mdInp.label;}
+//        inp.blur();
+        return;
+    }
+
+	setnextprev(ninp, pinp) {
+		this.nextinp = ninp;
+		this.previnp = pinp;
+		return;
+	}
+
+
+	getInpEl() {
+		return this.inpDiv;
+	}
+
+	getInpValue() {
+		return this.inpDiv.inp.value;
+	}
+}
+
+class azulTxtInp {
+	constructor(inpobj) {
+		this.txtDiv = document.createElement('div');
+		this.inpobj = inpobj;
+    	const divStyl = {
+        	id: 'inpDiv' + inpobj.idx,
+        	margin: '10px',
+        	border: '1px dashed green',
+        	minHeight: '50px',
+        	minWidth: inpobj.Length,
+        	position: 'relative',
+    	};
+    	Object.assign(this.txtDiv.style, divStyl);
+
+		const baseStyle = '1px solid black';
+		const focusStyle = '2px solid blue';
+
+		const inpStyl = {
+			border: '1px sold black',
+			padding: '5px',
+			resize: 'none',
+		};
+
+		let par = document.createElement('p');
+		par.textContent = this.inpobj.Field + ':';
+
+		let inp = document.createElement('textarea');
+		inp.id ='inp' + inpobj.idx;
+		inp.placeholder = 'Enter ' + this.inpobj.Field;
+		inp.cols = inpobj.cols;
+		inp.rows = inpobj.rows;
+		Object.assign(inp.style,inpStyl);
+//		inp.style.borderBottom = baseStyle;
+
+		inp.addEventListener('focus', (event) => {this.txtMdFocInp(event, inp);});
+		inp.addEventListener('blur', (event) => {this.txtMdBlurInp(event, inp);});
+//        inp.addEventListener('keyup', (event) => {this.inpMdKeyUpInp(event, inp, lab);});
+
+		this.txtDiv.inp = inp
+
+		this.txtDiv.appendChild(par);
+		this.txtDiv.appendChild(inp);
+	}
+
+
+	txtMdFocInp(ev, inp) {
+		ev.preventDefault();
+//		inp.placeholder="";
+//		inp.style.borderBottom = '2px solid blue';
+//            Object.assign(el.style,el.focusStyle);
+		inp.Change = false;
+		return;
+	}
+
+	txtMdBlurInp(ev, inp) {
+		ev.preventDefault();
+//	console.log("lost focus");
+//		inp.style.borderBottom = '1px solid black';
+//		lab.style.visibility = 'hidden';
+//		if (inp.value.length == 0) {inp.placeholder='Enter ' + this.inpobj.Field;}
+//	if (inp.change) {filledInp(el.value);inp.Change = false;}
+		return;
+	}
+
+
+    inpMdKeyUpInp(ev, inp, lab) {
+        ev.preventDefault();
+
+        let key = ev.key;
+        let el = ev.target;
+        let ctrlkey = ev.ctrlKey;
+//      console.log('key: ' + key);
+         switch (key) {
+//            case "ArrowLeft":
+//            case "ArrowRight":
+            case "ArrowUp":
+//				console.log("arrow down");
+				this.previnp.inpDiv.inp.focus();
+                break;
+            case 'ArrowDown':
+//				console.log("arrow down");
+				this.nextinp.inpDiv.inp.focus();
+				break;
+            case 'Enter':
+//				console.log("enter");
+				this.nextinp.inpDiv.inp.focus();
+                break;
+            default:
+
+              return;
+
+        }
+//        if (inp.value.length == 0) {inp.placeholder=this.mdInp.label;}
+//        inp.blur();
+        return;
+    }
+
+	setnextprev(ninp, pinp) {
+		this.nextinp = ninp;
+		this.previnp = pinp;
+		return;
+	}
+
+
+	getInpEl() {
+		return this.txtDiv;
+	}
+
+	getInpValue() {
+		return this.txtDiv.inp.value;
+	}
+}
+
+class azulSel {
+	constructor(selobj) {
+		this.selDiv = document.createElement('div');
+		this.selobj = selobj;
+    	const divStyl = {
+        	id: 'selDiv' + selobj.idx,
+        	margin: '10px',
+        	border: '1px dashed green',
+        	minHeight: '50px',
+        	minWidth: selobj.Length,
+        	position: 'relative',
+    	};
+    	Object.assign(this.selDiv.style,divStyl);
+
+		let lab = document.createElement('label');
+		lab.textContent = selobj.Field;
+		lab.htmlFor = 'inp' + selobj.idx;
+		const labStyl = {
+			visibility: 'hidden',
+			color: 'blue',
+			textAlign: 'start',
+			position: 'absolute',
+			fontSize: '0.8em',
+			left: '0px',
+			bottom: '22px',
+//		display: 'none',
+		};
+		Object.assign(lab.style,selobj.labStyl);
+		if ('labtext' in selobj) {lab.textContent=selobj.labtext;}
+
+		const selStyl = {
+			borderWidth: '0',
+			outlineStyle: 'none',
+			position: 'absolute',
+			left: '0px',
+			bottom: '0px',
+			minWidth: selobj.Length,
+		};
+
+		let sel = document.createElement('select');
+		selobj.List.forEach((element, key) => {
+  			sel[key] = new Option(element, key);
+		});
+//		inp.type = 'text';
+		sel.id ='inp' + selobj.idx;
+		sel.label = lab;
+		sel.baseStyl = '1px solid black';
+		sel.focusStyl = '2px solid blue';
+//		inp.placeholder = 'Enter ' + this.inpobj.Field;
+		Object.assign(sel.style,selStyl);
+		sel.style.borderBottom = baseStyle;
+
+		sel.addEventListener('focus', (event) => {this.selMdFocInp(event, sel, lab);});
+		sel.addEventListener('blur', (event) => {this.selMdBlurInp(event, sel, lab);});
+//        sel.addEventListener('keyup', (event) => {this.inpMdKeyUpInp(event, sel, lab);});
+
+		this.selDiv.sel = sel
+
+		this.selDiv.appendChild(lab);
+		this.selDiv.appendChild(sel);
+	}
+
+
+	selMdFocInp(ev, sel, lab) {
+		ev.preventDefault();
+		sel.placeholder="";
+		sel.style.borderBottom = sel.focusStyl;
+//            Object.assign(el.style,el.focusStyle);
+		lab.style.visibility = 'visible';
+		sel.Change = false;
+		return;
+	}
+
+	selMdBlurInp(ev, sel, lab) {
+		ev.preventDefault();
+//	console.log("lost focus");
+		sel.style.borderBottom = sel.baseStyl;
+//		lab.style.visibility = 'hidden';
+		if (sel.value.length == 0) {sel.placeholder='Enter ' + this.inpobj.Field;}
+//	if (inp.change) {filledInp(el.value);inp.Change = false;}
+		return;
+	}
+
+
+    selMdKeyUpInp(ev, sel, lab) {
+        ev.preventDefault();
+
+        let key = ev.key;
+        let el = ev.target;
+        let ctrlkey = ev.ctrlKey;
+//      console.log('key: ' + key);
+         switch (key) {
+//            case "ArrowLeft":
+//            case "ArrowRight":
+            case "ArrowUp":
+//				console.log("arrow down");
+				this.previnp.selDiv.sel.focus();
+                break;
+            case 'ArrowDown':
+//				console.log("arrow down");
+				this.nextinp.selDiv.sel.focus();
+				break;
+            case 'Enter':
+//				console.log("enter");
+				this.nextinp.selDiv.focus();
+                break;
+            default:
+
+              return;
+
+        }
+//        if (inp.value.length == 0) {inp.placeholder=this.mdInp.label;}
+//        inp.blur();
+        return;
+    }
+
+	setnextprev(ninp, pinp) {
+		this.nextinp = ninp;
+		this.previnp = pinp;
+		return;
+	}
+
+
+	getInpEl() {
+		return this.selDiv;
+	}
+
+	getInpValue() {
+		let sel = this.selDiv.sel;
+		let selopt = sel.options[sel.selectedIndex];
+		return selopt.text;
+	}
+}
+
