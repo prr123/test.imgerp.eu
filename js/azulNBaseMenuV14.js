@@ -7,6 +7,7 @@
 // V8: add google map
 // V9: add loading external scripts lazily
 // V12: add ability to insert html into azul.docbody
+// v14: added Class AzulBlog
 
 function loadsection(url) {
 
@@ -81,7 +82,8 @@ let azulSPA = {
 
 	mainDiv: {
 		style: {
-			width: 'calc(100% - 300px)',
+//			width: 'calc(100% -300px',
+			width: '100%',
 			border: '1px solid blue',
 			minHeight: '300px',
         },
@@ -279,6 +281,7 @@ let blogHeader = {
         style: {
 			display: 'flex',
 			justifyContent: 'flex-end',
+			flexWrap: 'wrap',
 			border: '1px dashed green',
 			width: '100%',
 			minHeight: '30px',
@@ -410,9 +413,6 @@ let blogFooter = {
 azulSPA.render = function() {
 
     azul.loadPage(azulSPA);
-
-//	blogA.init(azul.docbody);
-//	blogB.init(azul.docbody);
 
 	blogHeader.render(azul.header);
 
